@@ -26,9 +26,9 @@ class Blog(db.Model):
 
 @app.route("/")
 def index():
-    print(db)
+    blogs = Blog.query.order_by(Blog.id).all()
     template = jinja_env.get_template('blog.html')
-    return template.render()
+    return template.render(blogs = blogs)
 
 @app.route("/newpost", methods=['POST', 'GET'])
 def newpost():
@@ -45,6 +45,13 @@ def newpost():
             error1 = "Please write Title and Text"
     template = jinja_env.get_template('newpost.html')
     return template.render(error1=error1)
+
+@app.route("/blog")
+def blog():
+    blog = Blog.query.filter_by(id=request.args['id']).first()
+    print(blog)
+    template = jinja_env.get_template('article.html')
+    return template.render(blog = blog)
 
 if __name__ == '__main__':
     app.run()
